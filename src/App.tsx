@@ -36,7 +36,7 @@ function App() {
       className="min-h-dvh bg-[#F0FAF4] text-[#1E293B] flex flex-col font-sans"
       style={{ paddingBottom: 'var(--safe-bottom)' }}
     >
-      <main className="flex-1 overflow-y-auto overscroll-contain px-4 pt-2">
+      <main className="flex-1 overflow-y-auto overscroll-contain px-4 pt-0">
         <div className="max-w-lg mx-auto">
           {/* Sub Views Overlay */}
           {subView === 'add-expense' && <AddExpense />}
