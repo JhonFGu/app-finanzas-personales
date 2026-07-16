@@ -17,6 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           note: body.note,
           date: body.date,
           imageUrl: body.imageUrl,
+          savingLocation: body.savingLocation,
         })
         .where(eq(transactions.id, id))
         .returning();

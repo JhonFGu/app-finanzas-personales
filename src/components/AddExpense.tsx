@@ -4,6 +4,14 @@ import { useStore } from '../store';
 import { parseToCents } from '../lib/format';
 import { ArrowLeft, Bell, ChevronDown, Camera, X } from 'lucide-react';
 
+const defaultLocations = [
+  { id: 'bank_account', name: 'Cuenta Bancaria' },
+  { id: 'pocket', name: 'Bolsillo de Billetera' },
+  { id: 'virtual_card', name: 'Cuenta Virtual / Neobanco' },
+  { id: 'cash', name: 'Efectivo' },
+  { id: 'other', name: 'Otros' },
+];
+
 export default function AddExpense() {
   const { 
     categories, 
@@ -16,6 +24,11 @@ export default function AddExpense() {
     setEditingTransaction
   } = useStore();
 
+  const [locations] = useState<{ id: string; name: string }[]>(() => {
+    const saved = localStorage.getItem('finwise_saving_locations');
+    return saved ? JSON.parse(saved) : defaultLocations;
+  });
+
   const [type, setType] = useState<'expense' | 'income'>('expense');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [categoryId, setCategoryId] = useState('');
@@ -23,6 +36,7 @@ export default function AddExpense() {
   const [title, setTitle] = useState('Combustible');
   const [note, setNote] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [savingLocation, setSavingLocation] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -37,6 +51,7 @@ export default function AddExpense() {
       setNote(editingTransaction.note || '');
       setTitle(editingTransaction.note || '');
       setImageUrl(editingTransaction.imageUrl || null);
+      setSavingLocation(editingTransaction.savingLocation || '');
     } else if (prefilledCategoryId) {
       // Prefilled Category Mode
       const cat = categories.find(c => c.id === prefilledCategoryId);
@@ -98,6 +113,7 @@ export default function AddExpense() {
         note: note || title || selectedCategory?.name || '',
         date,
         imageUrl,
+        savingLocation: savingLocation || null,
       };
 
       if (editingTransaction) {
@@ -243,6 +259,30 @@ export default function AddExpense() {
               className="w-full px-5 py-3.5 rounded-2xl bg-[#E6F7F0] border-none text-[#1E293B] font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#00C795]/50 transition-all"
               required
             />
+          </div>
+
+          {/* Origen/Destino del dinero */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 mb-2 ml-1">
+              {type === 'expense' ? 'Origen del dinero (opcional)' : 'Destino del dinero (opcional)'}
+            </label>
+            <div className="relative">
+              <select
+                value={savingLocation}
+                onChange={(e) => setSavingLocation(e.target.value)}
+                className="w-full px-5 py-4 rounded-2xl bg-[#E6F7F0] border-none text-[#1E293B] appearance-none font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#00C795]/50 transition-all cursor-pointer"
+              >
+                <option value="">
+                  {type === 'expense' ? 'Selecciona el origen' : 'Selecciona el destino'}
+                </option>
+                {locations.map(loc => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-5 h-5 text-[#00C795] absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
 
           {/* Enter Message Textarea */}

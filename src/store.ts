@@ -19,6 +19,7 @@ export interface Transaction {
   note: string | null;
   date: string;
   imageUrl?: string | null;
+  savingLocation?: string | null;
   createdAt: string;
   categoryName: string | null;
   categoryIcon: string | null;
@@ -80,6 +81,7 @@ interface AppState {
     note?: string;
     date?: string;
     imageUrl?: string | null;
+    savingLocation?: string | null;
   }) => Promise<void>;
 
   // Navigation
@@ -113,6 +115,7 @@ interface AppState {
     note?: string;
     date?: string;
     imageUrl?: string | null;
+    savingLocation?: string | null;
   }) => Promise<void>;
   deleteTransaction: (id: number) => Promise<void>;
 

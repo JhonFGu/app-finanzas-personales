@@ -27,6 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       note: transactions.note,
       date: transactions.date,
       imageUrl: transactions.imageUrl,
+      savingLocation: transactions.savingLocation,
       createdAt: transactions.createdAt,
       categoryName: categories.name,
       categoryIcon: categories.icon,
@@ -51,6 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         note: body.note || null,
         date: body.date || new Date().toISOString().split('T')[0],
         imageUrl: body.imageUrl || null,
+        savingLocation: body.savingLocation || null,
       }).returning();
       return json(res, created, 201);
     } catch (e) {

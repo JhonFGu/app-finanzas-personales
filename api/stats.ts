@@ -66,6 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     note: transactions.note,
     date: transactions.date,
     imageUrl: transactions.imageUrl,
+    savingLocation: transactions.savingLocation,
     categoryName: categories.name,
     categoryIcon: categories.icon,
     categoryColor: categories.color,

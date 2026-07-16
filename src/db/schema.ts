@@ -28,6 +28,7 @@ export const transactions = pgTable('transactions', {
   note: varchar('note', { length: 500 }),
   date: date('date').notNull().defaultNow(),
   imageUrl: text('image_url'),
+  savingLocation: varchar('saving_location', { length: 100 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

@@ -287,16 +287,14 @@ export default function Transactions() {
       )}
 
       {/* Floating Action Button (FAB) */}
-      <button
-        onClick={() => setSubView('add-expense')}
-        className="fixed z-40 w-14 h-14 rounded-full bg-[#00C795] text-white shadow-lg shadow-[#00C795]/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
-        style={{
-          bottom: 'calc(var(--safe-bottom) + 5rem)',
-          right: '1.25rem',
-        }}
-      >
-        <Plus className="w-8 h-8 stroke-[2.5]" />
-      </button>
+      <div className="fixed left-1/2 -translate-x-1/2 w-full max-w-lg px-6 pointer-events-none z-40 flex justify-end" style={{ bottom: 'calc(var(--safe-bottom) + 5.5rem)' }}>
+        <button
+          onClick={() => setSubView('add-expense')}
+          className="pointer-events-auto w-14 h-14 rounded-full bg-[#00C795] text-white shadow-lg shadow-[#00C795]/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+        >
+          <Plus className="w-8 h-8 stroke-[2.5]" />
+        </button>
+      </div>
 
     </div>
   );
