@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react';
 import { useStore } from '../store';
-import { ArrowLeft, Bell, User, Shield, Settings, HelpCircle, LogOut, CreditCard, Camera } from 'lucide-react';
+import { latinAmericanCurrencies } from '../lib/format';
+import { ArrowLeft, Bell, User, Shield, Settings, HelpCircle, LogOut, CreditCard, Camera, Check } from 'lucide-react';
 
 export default function Profile() {
-  const { user, logoutUser, setActiveTab, setSubView, updateUserAvatar } = useStore();
+  const { user, logoutUser, setActiveTab, setSubView, updateUserAvatar, userCurrency, setUserCurrency } = useStore();
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -26,9 +29,67 @@ export default function Profile() {
     { label: 'Suscripciones y Deudas', icon: CreditCard, action: () => setSubView('subscriptions') },
     { label: 'Editar Perfil', icon: User },
     { label: 'Seguridad', icon: Shield },
-    { label: 'Configuración', icon: Settings },
+    { label: 'Configuración', icon: Settings, action: () => setShowSettings(true) },
     { label: 'Ayuda', icon: HelpCircle },
   ];
+
+  if (showSettings) {
+    return (
+      <div className="space-y-6 pb-24 font-sans animate-fade-in text-[#1E293B]">
+        {/* Header */}
+        <div className="bg-[#00C795] rounded-b-[40px] px-6 pt-10 pb-20 text-white relative -mx-4">
+          <div className="flex justify-between items-center mb-4">
+            <button
+              onClick={() => setShowSettings(false)}
+              className="p-2 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-xl font-bold">Configuración</h1>
+            <div className="w-9" /> {/* Spacer to center title */}
+          </div>
+        </div>
+
+        {/* Currency selection list */}
+        <div className="bg-white border border-[#E6F7F0] rounded-3xl p-5 shadow-sm space-y-4">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-500 uppercase tracking-wider mb-4 ml-1">
+              Moneda de la Aplicación
+            </h3>
+            <div className="divide-y divide-slate-100 max-h-[350px] overflow-y-auto pr-1 space-y-1">
+              {latinAmericanCurrencies.map((cur) => {
+                const isSelected = userCurrency === cur.code;
+                return (
+                  <button
+                    key={cur.code}
+                    onClick={() => setUserCurrency(cur.code)}
+                    className="w-full flex items-center justify-between py-3.5 px-3 rounded-2xl hover:bg-[#E6F7F0]/40 transition-colors text-left font-bold text-[#1E293B] text-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#E0EFFF] flex items-center justify-center text-[#007AFF] font-black text-xs">
+                        {cur.code}
+                      </div>
+                      <div>
+                        <p className="text-sm font-extrabold text-[#1E293B]">{cur.name}</p>
+                        <span className="text-[10px] font-bold text-slate-400">
+                          Símbolo: {cur.symbol}
+                        </span>
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <div className="w-6 h-6 rounded-full bg-[#00C795] flex items-center justify-center text-white shadow-sm">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-24 font-sans animate-fade-in text-[#1E293B]">

@@ -148,6 +148,8 @@ interface AppState {
   updateGoal: (id: number, data: any) => Promise<void>;
   deleteGoal: (id: number) => Promise<void>;
   contributeToGoal: (id: number, amountCents: number) => Promise<void>;
+  userCurrency: string;
+  setUserCurrency: (code: string) => void;
 }
 
 const getStoredUser = () => {
@@ -174,6 +176,12 @@ export const useStore = create<AppState>((set, get) => ({
   // Navigation Defaults
   activeTab: 'home',
   subView: getStoredUser() ? null : 'login',
+
+  userCurrency: (typeof window !== 'undefined' ? localStorage.getItem('finwise_user_currency') : null) || 'COP',
+  setUserCurrency: (code) => {
+    localStorage.setItem('finwise_user_currency', code);
+    set({ userCurrency: code });
+  },
 
   // Mock Auth Initial State
   user: getStoredUser(),

@@ -182,7 +182,7 @@ export default function Analysis() {
             </div>
             <div className="flex justify-between items-center text-[11px] font-bold text-slate-400">
               <span>30%</span>
-              <span>$20,000.00</span>
+              <span>{fmt(2000000)}</span>
             </div>
           </div>
 
