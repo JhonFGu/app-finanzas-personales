@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { eq } from 'drizzle-orm';
-import { transactions } from '../../src/db/schema';
-import { db, json, error, parseBody } from '../_lib';
+import { transactions } from '../../src/db/schema.js';
+import { db, json, error, parseBody } from '../_lib.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const id = Number(req.query.id);

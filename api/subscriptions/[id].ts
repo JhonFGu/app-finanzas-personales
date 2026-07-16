@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { eq } from 'drizzle-orm';
-import { subscriptions, transactions } from '../../src/db/schema';
-import { db, json, error, parseBody } from '../_lib';
+import { subscriptions, transactions } from '../../src/db/schema.js';
+import { db, json, error, parseBody } from '../_lib.js';
 
 const addOneMonth = (dateStr: string) => {
   const d = new Date(dateStr + 'T00:00:00');

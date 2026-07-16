@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { eq, and, gte, lte, desc, sql } from 'drizzle-orm';
-import { transactions, categories } from '../src/db/schema';
-import { db, json, error } from './_lib';
+import { transactions, categories } from '../src/db/schema.js';
+import { db, json, error } from './_lib.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') return error(res, 'Method not allowed', 405);
