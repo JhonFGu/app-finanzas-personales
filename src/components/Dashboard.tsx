@@ -39,7 +39,8 @@ export default function Dashboard() {
     confirmSubscriptionPayment,
     goals,
     fetchGoals,
-    setSubView
+    setSubView,
+    monthlyBudget
   } = useStore();
   const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly'>('monthly');
 
@@ -108,6 +109,20 @@ export default function Dashboard() {
   const balanceVal = stats?.balance ?? 0;
   const expenseVal = stats?.expense ?? 0;
 
+  const budgetPercent = monthlyBudget > 0 ? Math.min(100, Math.round((expenseVal / monthlyBudget) * 100)) : 0;
+  let budgetMessage = `${budgetPercent}% de tus gastos, todo se ve bien.`;
+  let budgetColorClass = 'text-emerald-600';
+  let budgetBarColor = 'bg-[#007AFF]';
+  if (budgetPercent > 80 && budgetPercent <= 100) {
+    budgetMessage = `${budgetPercent}% de tu presupuesto. ¡Cuidado, te estás acercando al límite!`;
+    budgetColorClass = 'text-yellow-600';
+    budgetBarColor = 'bg-yellow-500';
+  } else if (budgetPercent > 100) {
+    budgetMessage = `${budgetPercent}% de tu presupuesto. ¡Has excedido tu límite mensual!`;
+    budgetColorClass = 'text-red-500';
+    budgetBarColor = 'bg-red-500';
+  }
+
   const handlePay = async (id: number) => {
     try {
       await confirmSubscriptionPayment(id);
@@ -149,18 +164,18 @@ export default function Dashboard() {
           {/* Budget Progress Bar */}
           <div className="space-y-2">
             <div className="w-full bg-[#E6F7F0] rounded-full h-3.5 overflow-hidden flex">
-              <div className="bg-[#007AFF] h-full rounded-full transition-all duration-500" style={{ width: '30%' }} />
+              <div className={`${budgetBarColor} h-full rounded-full transition-all duration-500`} style={{ width: `${budgetPercent}%` }} />
             </div>
             <div className="flex justify-between items-center text-[11px] font-bold text-slate-400">
-              <span>30%</span>
-              <span>{fmt(2000000)}</span>
+              <span>{budgetPercent}%</span>
+              <span>{fmt(monthlyBudget)}</span>
             </div>
           </div>
 
           {/* Budget Message */}
-          <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-slate-100 text-xs font-semibold text-emerald-600">
-            <CheckCircle2 className="w-4 h-4 text-[#00C795]" />
-            <span>30% de tus gastos, todo se ve bien.</span>
+          <div className={`flex items-center gap-1.5 mt-3 pt-3 border-t border-slate-100 text-xs font-semibold ${budgetColorClass}`}>
+            <CheckCircle2 className="w-4 h-4" />
+            <span>{budgetMessage}</span>
           </div>
         </div>
       </div>

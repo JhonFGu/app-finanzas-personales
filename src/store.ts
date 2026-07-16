@@ -150,6 +150,8 @@ interface AppState {
   contributeToGoal: (id: number, amountCents: number) => Promise<void>;
   userCurrency: string;
   setUserCurrency: (code: string) => void;
+  monthlyBudget: number;
+  setMonthlyBudget: (amountCents: number) => void;
 }
 
 const getStoredUser = () => {
@@ -181,6 +183,11 @@ export const useStore = create<AppState>((set, get) => ({
   setUserCurrency: (code) => {
     localStorage.setItem('finwise_user_currency', code);
     set({ userCurrency: code });
+  },
+  monthlyBudget: (typeof window !== 'undefined' ? Number(localStorage.getItem('finwise_monthly_budget')) : 0) || 2000000,
+  setMonthlyBudget: (amountCents) => {
+    localStorage.setItem('finwise_monthly_budget', String(amountCents));
+    set({ monthlyBudget: amountCents });
   },
 
   // Mock Auth Initial State

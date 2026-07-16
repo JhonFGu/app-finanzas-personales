@@ -7,8 +7,17 @@ import { ArrowLeft, Bell, User, Shield, Settings, HelpCircle, LogOut, CreditCard
 import { compressImage } from '../lib/image';
 
 export default function Profile() {
-  const { user, logoutUser, setActiveTab, setSubView, updateUserAvatar, userCurrency, setUserCurrency } = useStore();
+  const { user, logoutUser, setActiveTab, setSubView, updateUserAvatar, userCurrency, setUserCurrency, monthlyBudget, setMonthlyBudget } = useStore();
   const [showSettings, setShowSettings] = useState(false);
+  const [tempBudget, setTempBudget] = useState(() => (monthlyBudget / 100).toString());
+
+  const handleBudgetChange = (val: string) => {
+    setTempBudget(val);
+    const parsed = parseFloat(val);
+    if (!isNaN(parsed) && parsed >= 0) {
+      setMonthlyBudget(Math.round(parsed * 100));
+    }
+  };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,6 +101,34 @@ export default function Profile() {
                   </button>
                 );
               })}
+            </div>
+          </div>
+        </div>
+        {/* Monthly budget configuration */}
+        <div className="bg-white border border-[#E6F7F0] rounded-3xl p-5 shadow-sm space-y-4">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-500 uppercase tracking-wider mb-3 ml-1">
+              Presupuesto Mensual
+            </h3>
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-slate-400 mb-1 ml-1">
+                Límite de gastos mensual
+              </label>
+              <div className="relative flex items-center">
+                <input
+                  type="number"
+                  value={tempBudget}
+                  onChange={(e) => handleBudgetChange(e.target.value)}
+                  placeholder="20000"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-[#E6F7F0] border-none text-[#1E293B] font-extrabold text-lg focus:outline-none focus:ring-2 focus:ring-[#00C795]/50 transition-all"
+                />
+                <span className="absolute right-5 font-bold text-slate-400 text-sm">
+                  {userCurrency}
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-400 ml-1">
+                Este límite se utiliza para calcular el porcentaje de progreso en tu saldo total.
+              </p>
             </div>
           </div>
         </div>
