@@ -4,6 +4,8 @@ import { useStore } from '../store';
 import { latinAmericanCurrencies } from '../lib/format';
 import { ArrowLeft, Bell, User, Shield, Settings, HelpCircle, LogOut, CreditCard, Camera, Check } from 'lucide-react';
 
+import { compressImage } from '../lib/image';
+
 export default function Profile() {
   const { user, logoutUser, setActiveTab, setSubView, updateUserAvatar, userCurrency, setUserCurrency } = useStore();
   const [showSettings, setShowSettings] = useState(false);
@@ -12,15 +14,21 @@ export default function Profile() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      alert('La imagen es demasiado grande. Elige una de menos de 2MB.');
+    if (file.size > 10 * 1024 * 1024) {
+      alert('La imagen es demasiado grande. Elige una de menos de 10MB.');
       return;
     }
 
     const reader = new FileReader();
-    reader.onloadend = () => {
+    reader.onloadend = async () => {
       const base64 = reader.result as string;
-      updateUserAvatar(base64);
+      try {
+        const compressed = await compressImage(base64, 300, 300, 0.7);
+        updateUserAvatar(compressed);
+      } catch (err) {
+        console.error('Error compressing image:', err);
+        updateUserAvatar(base64);
+      }
     };
     reader.readAsDataURL(file);
   };

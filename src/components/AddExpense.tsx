@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useStore } from '../store';
 import { parseToCents } from '../lib/format';
 import { ArrowLeft, Bell, ChevronDown, Camera, X } from 'lucide-react';
+import { compressImage } from '../lib/image';
 
 const defaultLocations = [
   { id: 'bank_account', name: 'Cuenta Bancaria' },
@@ -76,14 +77,21 @@ export default function AddExpense() {
     const file = e.target.files?.[0];
     if (file) {
       // Check file size (base64 of huge images could fail Neon query size limit of 10MB)
-      if (file.size > 2 * 1024 * 1024) {
-        setErrorMsg('La imagen es demasiado grande. Elige una menor a 2MB.');
+      if (file.size > 10 * 1024 * 1024) {
+        setErrorMsg('La imagen es demasiado grande. Elige una menor a 10MB.');
         return;
       }
 
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageUrl(reader.result as string);
+      reader.onloadend = async () => {
+        const base64 = reader.result as string;
+        try {
+          const compressed = await compressImage(base64, 800, 800, 0.7);
+          setImageUrl(compressed);
+        } catch (err) {
+          console.error('Error compressing image:', err);
+          setImageUrl(base64);
+        }
       };
       reader.readAsDataURL(file);
     }
