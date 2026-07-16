@@ -33,7 +33,7 @@ function App() {
   // 2. Authenticated flow: BottomNav Layout
   return (
     <div
-      className="min-h-dvh bg-[#F0FAF4] text-[#1E293B] flex flex-col font-sans"
+      className="h-dvh overflow-hidden bg-[#F0FAF4] text-[#1E293B] flex flex-col font-sans"
       style={{ paddingBottom: 'var(--safe-bottom)' }}
     >
       <main className="flex-1 overflow-y-auto overscroll-contain px-4 pt-0">
